@@ -10,20 +10,20 @@
 
 int main(void)
 {
-	int pwd[120];
+	int pwd[100];
 	int i, add, n;
 
 	add = 0;
 
 	srand(time(NULL));
 
-	for (i = 0; i < 120; i++)
+	for (i = 0; i < 100; i++)
 	{
-		pwd[i] = rand() % 98;
+		pwd[i] = rand() % 78;
 		add += (pwd[i] + '0');
 		putchar(pwd[i] + '0');
 
-		if ((2772 - add) - '0' < 98)
+		if ((2772 - add) - '0' < 78)
 		{
 			n = 2772 - add - '0';
 			add += n;
