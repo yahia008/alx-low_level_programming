@@ -2,133 +2,215 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+int stringLength(char *str);
+char *createCharArray(int size);
+char *removeLeadingZeroes(char *str);
+int getDigit(char c);
+void multiplyByDigit(char *result, char *number, int digit, int leadingZeroes);
+void addNumbers(char *sum, char *nextNum, int nextLength);
+
 /**
- * _memset - fills memory with a constant byte
+ * stringLength - Finds the length of a string.
+ * @str: The string to be measured.
  *
- * @s: input pointer that represents memory block
- *     to fill
- * @b: characters to fill/set
- * @n: number of bytes to be filled
- *
- * Return: pointer to the filled memory area
-*/
-
-char *_memset(char *s, char b, unsigned int n)
+ * Return: The length of the string.
+ */
+int stringLength(char *str)
 {
-	unsigned int i = 0;
+	int length = 0;
 
-	while (i < n)
+	while (*str++)
+		length++;
+	return (length);
+}
+
+/**
+ * createCharArray - Creates an array of chars and initializes it with,
+ * the character 'x'. Adds a terminating null byte.
+ * @size: The size of the array to be initialized.
+ * Description: If there is insufficient space,
+ * the function exits with a status of 98.
+ * Return: A pointer to the array.
+ */
+char *createCharArray(int size)
+{
+	char *array;
+	int index;
+
+	array = malloc(sizeof(char) * size);
+
+	if (array == NULL)
+		exit(98);
+
+	for (index = 0; index < (size - 1); index++)
+		array[index] = 'x';
+	array[index] = '\0';
+	return (array);
+}
+
+/**
+ * removeLeadingZeroes - Removes leading zeroes from a string of numbers.
+ * @str: The string of numbers to be processed.
+ *
+ * Return: A pointer to the next non-zero element.
+ */
+char *removeLeadingZeroes(char *str)
+{
+	while (*str && *str == '0')
+		str++;
+
+	return (str);
+}
+
+/**
+ * getDigit - Converts a digit character to a corresponding int.
+ * @c: The character to be converted.
+ *
+ * Description: If c is a non-digit, the function exits with a status of 98.
+ *
+ * Return: The converted int.
+ */
+int getDigit(char c)
+{
+	int digit = c - '0';
+
+	if (digit < 0 || digit > 9)
 	{
-		s[i] = b;
-		i++;
+		printf("Error\n");
+		exit(98);
 	}
-	return (s);
+	return (digit);
 }
 
 /**
- * _calloc - function that allocates memory
- *           for an array using memset
+ * multiplyByDigit - Multiplies a string of numbers by a single digit.
+ * @result: The buffer to store the result.
+ * @number: The string of numbers.
+ * @digit: The single digit.
+ * @leadingZeroes: The necessary number of leading zeroes.
  *
- * @nmemb: size of array
- * @size: size of each element
- *
- * Return: pointer to new allocated memory
-*/
-
-void *_calloc(unsigned int nmemb, unsigned int size)
+ * Description: If the number contains a non-digit character,
+ * the function exits with a status value of 98.
+ */
+void multiplyByDigit(char *result, char *number, int digit, int leadingZeroes)
 {
-	char *ptr;
+	int numberLength, product, tens = 0;
 
-	if (nmemb == 0 || size == 0)
-		return (NULL);
-	ptr = malloc(nmemb * size);
-	if (ptr == NULL)
-		return (NULL);
-	_memset(ptr, 0, nmemb * size);
+	numberLength = stringLength(number) - 1;
+	number += numberLength;
 
-	return (ptr);
-}
-
-
-/**
- * multiply - initialize array with 0 byte
- *
- * @s1: string 1
- * @s2: string 2
- *
- * Return: nothing
-*/
-
-void multiply(char *s1, char *s2)
-{
-	int i, l1, l2, total_l, f_digit, s_digit, res = 0, tmp;
-	char *ptr;
-	void *temp;
-
-	l1 = _length(s1);
-	l2 = _length(s2);
-	tmp = l2;
-	total_l = l1 + l2;
-	ptr = _calloc(sizeof(int), total_l);
-
-	/* store our pointer address to free later */
-	temp = ptr;
-
-	for (l1--; l1 >= 0; l1--)
+	while (*result)
 	{
-		f_digit = s1[l1] - '0';
-		res = 0;
-		l2 = tmp;
-		for (l2--; l2 >= 0; l2--)
+		*result = 'x';
+		result++;
+	}
+	result--;
+
+	while (leadingZeroes--)
+	{
+		*result = '0';
+		result--;
+	}
+	for (; numberLength >= 0; numberLength--, number--, result--)
+	{
+		if (*number < '0' || *number > '9')
 		{
-			s_digit = s2[l2] - '0';
-			res += ptr[l2 + l1 + 1] + (f_digit * s_digit);
-			ptr[l1 + l2 + 1] = res % 10;
-			res /= 10;
+			printf("Error\n");
+			exit(98);
 		}
-		if (res)
-			ptr[l1 + l2 + 1] = res % 10;
+		product = (*number - '0') * digit;
+		product += tens;
+		*result = (product % 10) + '0';
+		tens = product / 10;
 	}
-
-	while (*ptr == 0)
-	{
-		ptr++;
-		total_l--;
-	}
-
-	for (i = 0; i < total_l; i++)
-		printf("%i", ptr[i]);
-	printf("\n");
-	free(temp);
+	if (tens)
+		*result = (tens % 10) + '0';
 }
 
+/**
+ * addNumbers - Adds the numbers stored in two strings.
+ * @sum: The buffer storing the running sum.
+ * @nextNum: The next number to be added.
+ * @nextLength: The length of nextNum.
+ */
+void addNumbers(char *sum, char *nextNum, int nextLength)
+{
+	int total, tens = 0;
+
+	while (*(sum + 1))
+		sum++;
+
+	while (*(nextNum + 1))
+		nextNum++;
+
+	for (; *sum != 'x'; sum--)
+	{
+		total = (*sum - '0') + (*nextNum - '0');
+		total += tens;
+		*sum = (total % 10) + '0';
+		tens = total / 10;
+		nextNum--;
+		nextLength--;
+	}
+	for (; nextLength >= 0 && *nextNum != 'x'; nextLength--)
+	{
+		total = (*nextNum - '0');
+		total += tens;
+		*sum = (total % 10) + '0';
+		tens = total / 10;
+		sum--;
+		nextNum--;
+	}
+	if (tens)
+		*sum = (tens % 10) + '0';
+}
 
 /**
- * main - Entry point
+ * main - Multiplies two positive numbers.
+ * @argc: The number of arguments passed to the program.
+ * @argv: An array of pointers to the arguments.
  *
- * Description: a program that multiplies
- *            two positive numbers
- *
- * @argc: number of arguments
- * @argv: arguments array
- *
- * Return: 0 on success 98 on faliure
-*/
-
+ * Description: If the number of arguments is incorrect or one number,
+ * contains non-digits, the function exits with a status of 98.
+ * Return: Always 0.
+ */
 int main(int argc, char *argv[])
 {
-	char *n1 = argv[1];
-	char *n2 = argv[2];
+	char *finalProduct, *nextProduct;
+	int size, index, digit, leadingZeroes = 0;
 
-	if (argc != 3 || check_number(n1) || check_number(n2))
-		error_exit();
-
-	if (*n1 == '0' || *n2 == '0')
+	if (argc != 3)
 	{
-		_putchar('0');
-		_putchar('\n');
+		printf("Error\n");
+		exit(98);
 	}
-	else
-		multiply(n1, n2);
+	if (*(argv[1]) == '0')
+		argv[1] = removeLeadingZeroes(argv[1]);
+	if (*(argv[2]) == '0')
+		argv[2] = removeLeadingZeroes(argv[2]);
+	if (*(argv[1]) == '\0' || *(argv[2]) == '\0')
+	{
+		printf("0\n");
+		return (0);
+	}
+	size = stringLength(argv[1]) + stringLength(argv[2]);
+	finalProduct = createCharArray(size + 1);
+	nextProduct = createCharArray(size + 1);
+
+	for (index = stringLength(argv[2]) - 1; index >= 0; index--)
+	{
+		digit = getDigit(*(argv[2] + index));
+		multiplyByDigit(nextProduct, argv[1], digit, leadingZeroes++);
+		addNumbers(finalProduct, nextProduct, size - 1);
+	}
+	for (index = 0; finalProduct[index]; index++)
+	{
+		if (finalProduct[index] != 'x')
+			putchar(finalProduct[index]);
+	}
+	putchar('\n');
+	free(nextProduct);
+	free(finalProduct);
+
 	return (0);
 }
