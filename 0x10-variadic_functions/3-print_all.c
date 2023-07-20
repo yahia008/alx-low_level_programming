@@ -29,6 +29,7 @@ void print_all(const char * const format, ...)
 		while (j < 4)
 		{
 			if (format[i] == *printFormat[j].format_specifier)
+			{
 				printFormat[j].f(separator, args);
 				separator = ", ";
 			}
