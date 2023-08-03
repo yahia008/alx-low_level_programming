@@ -1,8 +1,7 @@
 #include "main.h"
-#include <string.h>
 
 /**
- * binary_to_uint - Converts a binary string to an unsigned int.
+ * binary_to_uint - Change a binary string to an unsigned int.
  * @b: A pointer to a string,
  * containing only '0' and '1' characters.
  *
@@ -12,21 +11,23 @@
 
 unsigned int binary_to_uint(const char *b)
 {
-	unsigned int total = 0,  baseVal = 1;
-	int biLen = strlen(b);
+	unsigned int total = 0, decVal = 1;
 	int i;
 
 	if (b == NULL)
 		return (0);
 
-	for (i = (biLen - 1); i >= 0; i--)
-	{
-		if (b[i] == '1')
-		total += baseVal;
-		baseVal *= 2;
+	for (i = 0; b[i]; i++)
 
+		;
+	for (i -= 1; i >= 0; i--)
+	{
+		if (b[i] != '0' && b[i] != '1')
+			return (0);
+
+		total += (b[i] - '0') * decVal;
+		decVal *= 2;
 	}
 
 	return (total);
-
 }
