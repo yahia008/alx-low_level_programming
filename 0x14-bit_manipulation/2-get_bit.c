@@ -20,7 +20,7 @@ int get_bit(unsigned long int n, unsigned int index)
 
 
 		result = (n & (1UL << index)) ? 1 : 0;
-		return (0);
+
 
 	return (result);
 }
