@@ -1,13 +1,11 @@
 #include "main.h"
 
 /**
- * main - Starting point of the program.
- * @argc: The argument count.
- * @argv: The argument vector.
- *
+ * main - Starting point of the program
+ * @file: The source file name.
+ * @dest: The destination file name.
  * Return: Always 0 on successful completion.
  */
-
 void content_copy(const char *file, const char *dest);
 
 int main(int argc, char **argv)
