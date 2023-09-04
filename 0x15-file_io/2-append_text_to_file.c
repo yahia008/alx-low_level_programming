@@ -9,26 +9,43 @@
  */
 int append_text_to_file(const char *filename, char *text_content)
 {
-	int file_descriptor;
-	int content_length;
+	int fd;
+	int content_len;
 
 	if (!filename)
 		return (-1);
 
-	file_descriptor = open(filename, O_WRONLY | O_APPEND);
-	if (file_descriptor == -1)
+	fd = open(filename, O_WRONLY | O_APPEND);
+	if (fd  == -1)
 		return (-1);
 
 	if (text_content)
 	{
-		content_length = _strlen(text_content);
+		content_len = _strlen(text_content);
 
-		if (write(file_descriptor, text_content, content_length) == -1)
+		if (write(fd, text_content, content_len) == -1)
 		{
-			close(file_descriptor);
+			close(fd);
 			return (-1);
 		}
 	}
-	close(file_descriptor);
+	close(fd);
 	return (1);
+}
+
+/**
+ * _strlen - Returns the length of a string.
+ * @s: String to count.
+ *
+ * Return: String length.
+ */
+
+int _strlen(char *s)
+{
+	int counter = 0;
+
+	while (s[counter])
+		counter++;
+
+	return (counter);
 }
