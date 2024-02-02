@@ -6,7 +6,7 @@
  *
  * Description:
  *   This function deallocates memory used by the,
- *   given hash table and all 
+ *   given hash table and all
  *   its key-value pairs, including keys and values.
  */
 
