@@ -1,35 +1,35 @@
 #include "hash_tables.h"
 
 /**
- * hash_table_print - Display the hash table's contents.
- * @ht: The hash table to show.
+ * hash_table_delete - Delete a hash table and its contents.
+ * @ht: The hash table to be deleted.
  *
- * This function prints the key-value pairs stored in the hash table
- * in the specified format.
+ * Description:
+ *   This function deallocates memory used by the,
+ *   given hash table and all 
+ *   its key-value pairs, including keys and values.
  */
 
-void hash_table_print(const hash_table_t *ht)
+void hash_table_delete(hash_table_t *ht)
 {
 	unsigned long int i;
-	int separator = 0;
+	hash_node_t *current, *temp;
 
 	if (ht == NULL)
 		return;
 
-	printf("{");
-
 	for (i = 0; i < ht->size; i++)
 	{
-		hash_node_t *current = ht->array[i];
-
+		current = ht->array[i];
 		while (current != NULL)
 		{
-			if (separator)
-				printf(", ");
-			printf("'%s': '%s'", current->key, current->value);
-			separator = 1;
-			current = current->next;
+			temp = current->next;
+			free(current->key);
+			free(current->value);
+			free(current);
+			current = temp;
 		}
 	}
-	printf("}\n");
+	free(ht->array);
+	free(ht);
 }
